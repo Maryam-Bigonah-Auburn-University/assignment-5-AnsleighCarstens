@@ -1,1 +1,50 @@
+#include <iostream>
+#include <string>
+#include <cctype> // for tolower and toupper functions
 
+using namespace std;
+
+int main() {
+    // Step 1: Input the sentence
+    string sentence;
+    cout << "Enter a sentence (up to 100 characters): ";
+    getline(cin, sentence);
+
+    // Step 2: Remove extra spaces and convert letters for capitalization
+    string correctedSentence = "";
+    bool firstLetter = true;
+    bool previousSpace = false;
+
+    for (size_t i = 0; i < sentence.length(); ++i) {
+        // Step 3: Handle capitalization of the first letter
+        if (firstLetter && isalpha(sentence[i])) {
+            correctedSentence += toupper(sentence[i]);
+            firstLetter = false;
+        } 
+        // Step 4: Convert the rest of the sentence to lowercase
+        else if (isalpha(sentence[i])) {
+            correctedSentence += tolower(sentence[i]);
+            previousSpace = false;
+        }
+        // Step 5: Handle spaces
+        else if (sentence[i] == ' ') {
+            if (!previousSpace) {
+                correctedSentence += ' ';
+                previousSpace = true;
+            }
+        }
+        // Step 6: Copy the period at the end
+        else if (sentence[i] == '.') {
+            correctedSentence += '.';
+            break; // Stop processing after the period
+        }
+        else {
+            correctedSentence += sentence[i]; // For any non-alphabetic characters except space
+        }
+    }
+
+    // Step 7: Output the corrected sentence
+    cout << "Corrected sentence: " << correctedSentence << endl;
+
+    return 0;
+}
