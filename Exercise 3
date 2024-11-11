@@ -1,1 +1,71 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cstdlib> // for exit
 
+using namespace std;
+
+// Function to merge two sorted files into one sorted output file
+void mergeFiles(ifstream &file1, ifstream &file2, ofstream &outputFile) {
+    int num1, num2;
+    bool file1HasValue = (file1 >> num1); // Try to read the first number from file1
+    bool file2HasValue = (file2 >> num2); // Try to read the first number from file2
+
+    // Step 1: Merge until one of the files is exhausted
+    while (file1HasValue && file2HasValue) {
+        if (num1 < num2) {
+            outputFile << num1 << endl;   // Write the smaller number to output
+            file1HasValue = (file1 >> num1); // Read the next number from file1
+        } else {
+            outputFile << num2 << endl;   // Write the smaller number to output
+            file2HasValue = (file2 >> num2); // Read the next number from file2
+        }
+    }
+
+    // Step 2: If file1 still has remaining numbers, write them to the output
+    while (file1HasValue) {
+        outputFile << num1 << endl;
+        file1HasValue = (file1 >> num1);
+    }
+
+    // Step 3: If file2 still has remaining numbers, write them to the output
+    while (file2HasValue) {
+        outputFile << num2 << endl;
+        file2HasValue = (file2 >> num2);
+    }
+}
+
+int main() {
+    // Open the two input files
+    ifstream file1("file1.txt");
+    ifstream file2("file2.txt");
+    
+    // Check if the files were opened successfully
+    if (!file1) {
+        cerr << "Error: file1.txt could not be opened." << endl;
+        exit(1);
+    }
+    if (!file2) {
+        cerr << "Error: file2.txt could not be opened." << endl;
+        exit(1);
+    }
+
+    // Open the output file
+    ofstream outputFile("file3.txt");
+    if (!outputFile) {
+        cerr << "Error: file3.txt could not be opened." << endl;
+        exit(1);
+    }
+
+    // Call the merge function to merge the two input files into the output file
+    mergeFiles(file1, file2, outputFile);
+
+    // Close all the files
+    file1.close();
+    file2.close();
+    outputFile.close();
+
+    cout << "Merging complete. Output written to file3.txt" << endl;
+
+    return 0;
+}
