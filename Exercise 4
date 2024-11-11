@@ -1,1 +1,57 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 
+using namespace std;
+
+// Function to load the answers from the file into a vector
+void loadAnswers(const string &filename, vector<string> &answers) {
+    ifstream file(filename);
+    if (!file) {
+        cerr << "Error: Could not open " << filename << endl;
+        exit(1);
+    }
+
+    string answer;
+    while (getline(file, answer)) {
+        answers.push_back(answer); // Add each line from the file to the answers vector
+    }
+
+    file.close();
+}
+
+int main() {
+    vector<string> answers;
+    string filename = "answers.txt";
+
+    // Load answers from the file into the vector
+    loadAnswers(filename, answers);
+
+    if (answers.empty()) {
+        cerr << "Error: The answers file is empty!" << endl;
+        return 1;
+    }
+
+    string question;
+    int index = 0;
+    
+    // Start answering questions until the user chooses to exit
+    while (true) {
+        cout << "Ask a question (or type 'exit' to quit): ";
+        getline(cin, question);
+
+        if (question == "exit") {
+            cout << "Goodbye!" << endl;
+            break;
+        }
+
+        // Output the current answer
+        cout << answers[index] << endl;
+
+        // Move to the next answer, and wrap around to the start of the list if necessary
+        index = (index + 1) % answers.size();
+    }
+
+    return 0;
+}
